@@ -1,53 +1,110 @@
 # Subtitle Generator
 
-A deep learning-based system for automatically generating subtitles from video content. The project uses a hybrid CNN-LSTM architecture to convert audio spectrograms into text, creating synchronized subtitles for videos.
+A deep learning-based subtitle generation system that creates subtitles for videos by processing audio through a hybrid CNN-LSTM architecture.
 
-## Overview
+## Abstract
 
-This project aims to create an end-to-end subtitle generation system that:
+This project develops an end-to-end subtitle generation system that:
 - Takes YouTube video URLs as input
-- Downloads and processes videos
-- Extracts audio content
-- Converts speech to text using deep learning
-- Synchronizes generated subtitles with video
+- Downloads and processes videos using YT-DLP
+- Extracts audio using FFmpeg
+- Converts audio into spectrograms using Librosa
+- Processes spectrograms through a CNN-LSTM model
+- Generates synchronized subtitles
 
-## Architecture
+The system uses a hybrid CNN-LSTM architecture to convert audio spectrograms into text, incorporating features like temporal processing and character-level prediction.
 
-The system employs a hybrid CNN-LSTM architecture:
-- Convolutional Neural Networks (CNNs) for processing audio spectrograms
-- Long Short-Term Memory Networks (LSTMs) for sequential text prediction
-- Time-distributed output layers for character-level prediction
-- Batch normalization and dropout for regularization
+## Methodology
 
-### Key Components
+### Problem Statement
+Modern subtitle generators are essential for:
+- Making content accessible to deaf/hard-of-hearing individuals
+- Supporting non-native speakers
+- Enabling content consumption in noisy environments
+- Facilitating cross-language content delivery
 
-1. **Audio Processing**
-   - Audio extraction using FFmpeg
-   - Spectrogram generation with Librosa
-   - Normalization and preprocessing
 
-2. **Text Processing**
-   - Character-level one-hot encoding
-   - Sequence padding and normalization
-   - Word error rate (WER) calculation
+### Data Collection and Preprocessing
 
-3. **Neural Network**
-   - Multiple CNN layers (64, 128, 256, 512 filters)
-   - Bidirectional LSTM layers
-   - TimeDistributed output layer
-   - Optimization using Adam
-
-## Dataset
-
-The model is trained on the LibriSpeech dataset:
-- Clean speech audio recordings
-- Corresponding text transcriptions
+#### Dataset
+- Using [LibriSpeech dataset](https://www.openslr.org/12)
+- ~1000 hours of English speech
+- Clean, segmented audiobook recordings
 - Organized by speaker and chapter
-- Train-clean-100 subset used for initial development
+- Used train-clean-100 subset for development
 
-## Requirements
+#### Preprocessing Steps
+1. Audio processing:
+   - FLAC to spectrogram conversion
+   - Speaker and chapter organization
+   - Transcript matching
+2. Data organization:
+   - File ID extraction
+   - Speaker/chapter mapping
+   - Transcript alignment
 
-```
+### Model Architecture
+
+#### CNN Layers
+- Multiple convolutional layers (64, 128, 256, 512 filters)
+- LeakyReLU activation
+- Batch normalization
+- MaxPooling
+- Dropout (20%)
+
+#### LSTM Processing
+- Bidirectional LSTM layers
+- 512 and 256 units respectively
+- 30% dropout rate
+- TimeDistributed output layer
+
+#### Training Parameters
+- Batch size: 16
+- Epochs: 20
+- Optimizer: Adam
+- Loss: Categorical Cross-entropy
+
+## Results
+
+Current model performance:
+- Word Error Rate (WER): 0.98
+- Model predictions require improvement
+- Base architecture implemented successfully
+
+## Alternative Implementation
+
+A successful implementation was achieved using pre-trained models:
+1. OpenAI's Whisper for transcription
+2. FFmpeg for subtitle overlay
+3. YT-DLP for video downloading
+
+## Challenges Faced
+
+1. Technical Limitations:
+   - Limited GPU resources
+   - Dataset size constraints
+   - Model architecture optimization
+
+2. Performance Issues:
+   - High Word Error Rate
+   - Architecture tuning difficulties
+   - Resource constraints
+
+## Future Scope
+
+1. Technical Improvements:
+   - Reduce Word Error Rate
+   - Implement advanced encoding techniques
+   - Optimize model architecture
+
+2. Feature Additions:
+   - Noise resistance capabilities
+   - Multilingual support
+   - Real-time processing
+
+## Dependencies
+
+```python
 tensorflow
 keras
 numpy
@@ -57,49 +114,24 @@ ffmpeg
 yt-dlp
 ```
 
-## Current Status
-
-The project is in development with some limitations:
-- Current WER: 0.98
-- Prediction accuracy needs improvement
-- Real-time subtitle overlay functionality pending
-
-## Future Improvements
-
-1. **Performance Enhancement**
-   - Reduce Word Error Rate
-   - Improve model architecture
-   - Implement better encoding techniques
-
-2. **Feature Additions**
-   - Noise resistance
-   - Multilingual support
-   - Real-time processing
-
-3. **Technical Improvements**
-   - GPU optimization
-   - Larger dataset utilization
-   - Advanced architecture exploration
-
-## Alternative Implementation
-
-A working version using pre-trained models has been developed using:
-1. Whisper by OpenAI for transcription
-2. FFmpeg for subtitle overlay
-3. YT-DLP for video downloading
+[Previous sections remain the same until References]
 
 ## References
 
-- [History of Subtitles](https://subtitlebee.com/blog/history-of-subtitles)
-- [AI for Subtitles Guide](https://www.amberscript.com/en/blog/ai-for-subtitles-for-videos-guide)
-- [LibriSpeech Dataset](https://www.openslr.org/12)
-- [Audio Signal Processing with Spectrograms](https://khareanu1612.medium.com/audio-signal-processing-with-spectrograms-and-librosa-b66a0a6bc5cc)
-- [One-Hot Encoding Guide](https://www.geeksforgeeks.org/ml-one-hot-encoding)
+1. [YouTube Playlist - Audio Processing Tutorials](https://youtube.com/playlist?list=PLKnIA16_RmvYuZauWaPlRTC54KxSNLtNn)
+2. [YouTube Tutorial on Audio Processing](https://youtu.be/ZLIPkmmDJAc)
+3. [Kaggle Notebook - LibriSpeech Implementation](https://www.kaggle.com/code/heiswicked/libri-01)
+4. [Deep Audio Classification GitHub Repository](https://github.com/nicknochnack/DeepAudioClassification/blob/main/AudioClassification.ipynb)
+5. [YouTube Tutorial - Audio Processing Guide](https://www.youtube.com/watch?v=dJYGatp4SvA)
+6. [Audio Deep Learning Made Simple - Towards Data Science](https://towardsdatascience.com/audio-deep-learning-made-simple-part-1-state-of-the-art-techniques-da1d3dff2504)
+7. [Speech Recognition with Neural Networks - GitHub](https://github.com/vrnanshuman/speech-recognition-with-nn/blob/main/vui_notebook.ipynb)
+8. [Research Paper on Speech Recognition](https://www.sciencedirect.com/science/article/pii/S1877050924006227)
+9. [History of Subtitles - SubtitleBee](https://subtitlebee.com/blog/history-of-subtitles)
+10. [AI for Subtitles Guide - AmberScript](https://www.amberscript.com/en/blog/ai-for-subtitles-for-videos-guide)
+11. [LibriSpeech ASR Corpus](https://www.openslr.org/12)
+12. [Audio Signal Processing with Spectrograms](https://khareanu1612.medium.com/audio-signal-processing-with-spectrograms-and-librosa-b66a0a6bc5cc)
+13. [One-Hot Encoding Guide - GeeksforGeeks](https://www.geeksforgeeks.org/ml-one-hot-encoding)
+14. [Sparse Matrix in Machine Learning - GeeksforGeeks](https://www.geeksforgeeks.org/sparse-matrix-in-machine-learning)
+15. [LSTM vs GRU Comparison](https://medium.com/@prudhviraju.srivatsavaya/lstm-vs-gru-c1209b8ecb5a)
+16. [Regularization in Machine Learning - GeeksforGeeks](https://www.geeksforgeeks.org/regularization-in-machine-learning)
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-[Add your chosen license here]
